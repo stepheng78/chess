@@ -1,0 +1,12 @@
+C:\Users\stephen.garthwaite\source\repos\Chess\bin\Debug\netcoreapp2.2\Chess.deps.json
+C:\Users\stephen.garthwaite\source\repos\Chess\bin\Debug\netcoreapp2.2\Chess.runtimeconfig.json
+C:\Users\stephen.garthwaite\source\repos\Chess\bin\Debug\netcoreapp2.2\Chess.runtimeconfig.dev.json
+C:\Users\stephen.garthwaite\source\repos\Chess\bin\Debug\netcoreapp2.2\Chess.dll
+C:\Users\stephen.garthwaite\source\repos\Chess\bin\Debug\netcoreapp2.2\Chess.pdb
+C:\Users\stephen.garthwaite\source\repos\Chess\obj\Debug\netcoreapp2.2\Chess.csprojAssemblyReference.cache
+C:\Users\stephen.garthwaite\source\repos\Chess\obj\Debug\netcoreapp2.2\Chess.csproj.CoreCompileInputs.cache
+C:\Users\stephen.garthwaite\source\repos\Chess\obj\Debug\netcoreapp2.2\Chess.AssemblyInfoInputs.cache
+C:\Users\stephen.garthwaite\source\repos\Chess\obj\Debug\netcoreapp2.2\Chess.AssemblyInfo.cs
+C:\Users\stephen.garthwaite\source\repos\Chess\obj\Debug\netcoreapp2.2\Chess.dll
+C:\Users\stephen.garthwaite\source\repos\Chess\obj\Debug\netcoreapp2.2\Chess.pdb
+C:\Users\stephen.garthwaite\source\repos\Chess\obj\Debug\netcoreapp2.2\Chess.genruntimeconfig.cache

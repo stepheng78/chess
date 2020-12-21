@@ -1,0 +1,239 @@
+﻿
+1. Model - How does the data change? 
+	* Why, how and how not (state changes)?  - 
+	* business logic(how does our program do things?) 
+	* How do the pieces move 
+	
+2. Controller - Game play loop - how is it driven?
+3. View - UI
+
+Ingredients - these things I need. 
+
+
+
+
+
+/*
+            
+            Piece whiteRookQueen = new Piece
+            {
+                ShortCode = "WRQ",
+                StartLocation = 1
+            };
+            UpdateTileState(whiteRookQueen.StartLocation, whiteRookQueen.ShortCode);
+
+            Piece whiteKnightQueen = new Piece
+            {
+                ShortCode = "WKQ",
+                StartLocation = 2
+            };
+            UpdateTileState(whiteKnightQueen.StartLocation, whiteKnightQueen.ShortCode);
+
+            Piece whiteBishopQueen = new Piece
+            {
+                ShortCode = "WBQ",
+                StartLocation = 3
+            };
+            UpdateTileState(whiteBishopQueen.StartLocation, whiteBishopQueen.ShortCode);
+
+            Piece whiteQueen = new Piece
+            {
+                ShortCode = "WQ",
+                StartLocation = 4
+            };
+            UpdateTileState(whiteQueen.StartLocation, whiteQueen.ShortCode);
+
+            Piece whiteKing = new Piece
+            {
+                ShortCode = "WK",
+                StartLocation = 5
+            };
+            UpdateTileState(whiteKing.StartLocation, whiteKing.ShortCode);
+
+            Piece whiteBishopKing = new Piece
+            {
+                ShortCode = "WBK",
+                StartLocation = 6
+            };
+            UpdateTileState(whiteBishopKing.StartLocation, whiteBishopKing.ShortCode);
+
+            Piece whiteKnightKing = new Piece
+            {
+                ShortCode = "WKK",
+                StartLocation = 7
+            };
+            UpdateTileState(whiteKnightKing.StartLocation, whiteKnightKing.ShortCode);
+
+            Piece whiteRookKing = new Piece
+            {
+                ShortCode = "WRK",
+                StartLocation = 8
+            };
+            UpdateTileState(whiteRookKing.StartLocation, whiteRookKing.ShortCode);
+
+
+            Piece whitePawn1 = new Piece
+            {
+                ShortCode = "WP1",
+                StartLocation = 9
+            };
+            UpdateTileState(whitePawn1.StartLocation, whitePawn1.ShortCode);
+            */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+public IDictionary<string, int> GenerateTiles() 
+{
+    //IReadOnlyDictionary<string,string> 
+    IDictionary<string, int> tiles = new Dictionary<string, int>();
+
+Tiles.Add(new Tile());
+
+    //IGenerateTiles interfacedBoard = new Board();
+    //interfacedBoard.TileCount;
+
+    foreach (var col in fileList)
+    {
+        Console.WriteLine("Current file: {0}",col);
+        string currentCol = col.ToString();
+        foreach (var row in rankList)
+        {
+            string tileKey = currentCol + Convert.ToString(row); 
+            tiles.Add(tileKey, "X");
+        }
+    }
+    return tiles;
+}
+         
+
+
+ //IDictionary<string, string> boardTiles = GenerateTiles();
+            /*
+            foreach (KeyValuePair<string, string> tile in boardTiles)
+            {
+                if (newLineCounter == 8){
+                    Console.WriteLine("");
+                    newLineCounter = 0;
+                }
+                Console.Write("{0} ", tile.Value);
+                newLineCounter += 1;
+            }
+            */
+
+ //IDictionary<string, int> GenerateTiles();
+
+ 
+public  void DisplayBoardOld()
+{
+    string boardSquare = "X ";
+    for (int line = 0; line < 8; line++)
+    {
+        Console.WriteLine("");
+        for (int square = 0; square < 8; square++)
+        {
+            Console.Write(boardSquare);
+        }
+
+    }
+}*/
+
+public void DisplayBoardListBased()
+{
+    for (int i = 0; i < fileList.Count; i++)
+    {
+        Console.Write(fileList[i]);
+
+        for (int j = 0; j < rankList.Count; j++)
+        {
+            Console.Write(rankList[j]);
+        }
+
+        Console.WriteLine("");
+    }
+    }
+
+
+   /*
+        static void AddTile()
+        {
+            boardTiles.Add(new Tile());
+        }
+        */
+        //Console.WriteLine(boardTiles[0]);
+
+
+
+
+// This function will do the heavy lifting and create the tiles; setting each tile to a blank value. 
+            // It will also assign a board reference to each tile
+
+            for (int i = 0; i < TileCount; i++)
+            {
+                int boardReferenceValue = i;
+            
+                Tiles.Add(new Tile { BoardReference = boardReferenceValue });
+
+                //var editableBoardTiles = (IList<Tile>)boardTiles; // explicit casting 
+                //editableBoardTiles.Add(new Tile { BoardReference = BoardReferenceValue });
+            }
+
+            return Tiles;
+            //Console.WriteLine("Tile Count: {0}", boardTiles.Count);
+
+
+/*
+    public char FileLimit { get; set; }
+    public int RankLimit { get; set; }
+         
+    List<int>
+    IList<int> rankList = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+
+        
+// Contains the letter designator for each file of the board
+IList<string> _fileList = new List<string> { "A", "B", "C", "D", "E", "F", "G", "H" };
+
+        
+
+// Setup variable to accept a list of tiles. Not sure why I went with IReadOnlyList
+//IReadOnlyList<Tile> boardTiles = new List<Tile>();
+*/
+
+
+
+
+
+/*
+IPiece rook = Piece.Create(PieceColour.White, PieceType.Rook);
+IPiece knight = Piece.Create(PieceColour.White, PieceType.Knight);
+IPiece bishop = Piece.Create(PieceColour.White, PieceType.Bishop);
+IPiece Queen = Piece.Create(PieceColour.White, PieceType.Queen);
+IPiece King = Piece.Create(PieceColour.White, PieceType.King);
+IPiece whiteBishopKing = Piece.Create(PieceColour.White, PieceType.Bishop);
+IPiece whiteKnightKing = Piece.Create(PieceColour.White, PieceType.Knight);
+IPiece whiteRookKing = Piece.Create(PieceColour.White, PieceType.Rook);
+IPiece whitePawn1 = Piece.Create(PieceColour.White, PieceType.Pawn);
+
+chessPieces.Add(Rook);
+chessPieces.Add(Knight);
+chessPieces.Add(whiteBishopQueen);
+chessPieces.Add(whiteQueen); 
+chessPieces.Add(whiteKing);
+chessPieces.Add(whiteBishopKing);
+chessPieces.Add(whiteKnightKing);
+chessPieces.Add(whiteRookKing);
+chessPieces.Add(whitePawn1);
+*/
