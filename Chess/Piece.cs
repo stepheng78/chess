@@ -8,14 +8,6 @@ namespace Chess
     //set generic things about a piece
     public abstract class Piece : IPiece
     {
-        /* 
- 
-        What methods should a piece have?
-        Add piece
-        Assigning start location to a piece
-       
-        */
-
         public virtual string Symbol => "X";
         public PieceColour Colour { get; set; }
         

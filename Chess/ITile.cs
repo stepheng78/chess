@@ -1,6 +1,6 @@
 ﻿namespace Chess
 {
-    public interface IPiece
+    public interface ITile
     {
 
     }

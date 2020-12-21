@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\stephen.garthwaite\\source\\repos\\Chess\\Chess.csproj": {}
+    "C:\\Users\\stephen.garthwaite\\source\\repos\\chess\\Chess\\Chess.csproj": {}
   },
   "projects": {
-    "C:\\Users\\stephen.garthwaite\\source\\repos\\Chess\\Chess.csproj": {
+    "C:\\Users\\stephen.garthwaite\\source\\repos\\chess\\Chess\\Chess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\stephen.garthwaite\\source\\repos\\Chess\\Chess.csproj",
+        "projectUniqueName": "C:\\Users\\stephen.garthwaite\\source\\repos\\chess\\Chess\\Chess.csproj",
         "projectName": "Chess",
-        "projectPath": "C:\\Users\\stephen.garthwaite\\source\\repos\\Chess\\Chess.csproj",
+        "projectPath": "C:\\Users\\stephen.garthwaite\\source\\repos\\chess\\Chess\\Chess.csproj",
         "packagesPath": "C:\\Users\\stephen.garthwaite\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\stephen.garthwaite\\source\\repos\\Chess\\obj\\",
+        "outputPath": "C:\\Users\\stephen.garthwaite\\source\\repos\\chess\\Chess\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
