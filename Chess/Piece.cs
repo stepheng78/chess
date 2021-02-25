@@ -5,16 +5,13 @@ using System.Text;
 
 namespace Chess
 {
-    //set generic things about a piece
     public abstract class Piece : IPiece
     {
         public virtual string Symbol => "X";
         public PieceColour Colour { get; set; }
         
-        public int StartLocation { get; set; }
-
-  
-        public IDictionary<string, string> AllowedMovements = new Dictionary<string, string>(); //<string, string> == <Movement Direction , Movement Limit>
+        //public int StartLocation { get; set; }
+        //public IDictionary<string, string> AllowedMovements = new Dictionary<string, string>(); //<string, string> == <Movement Direction , Movement Limit>
 
         public Piece(PieceColour colour)
         {

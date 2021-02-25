@@ -6,15 +6,16 @@ namespace Chess
 {
     public class Tile : ITile {
         public IPiece Piece { get; set; }
-
-        public void SetPiece(IPiece piece)
+        
+        public bool SetPiece(IPiece piece)
         {
             Piece = piece;
+            return true;
         }
 
         public override string ToString()
         {
-            return Piece?.ToString() ?? "X";
+            return Piece?.ToString() ?? "XX";
         }
     }
 }
