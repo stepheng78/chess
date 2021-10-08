@@ -89,3 +89,212 @@ https://docs.microsoft.com/en-us/dotnet/api/system.drawing.point?view=net-5.0
 raycasting - picking up pieces to inspect
 
 bresenham's line algorithm
+
+
+// This method was going to be used to retrieve all tile along a line of movement. 
+// However abandoning this approach in favour of a simpler one. 
+
+public List<string> GetTilesOnMovementLine(int x1, int x2, int y1, int y2)
+{
+    //Need more code to deal with moving along a negative line
+            
+    Console.WriteLine("Retrieving all tile location along intended movement path...");
+    List<string> Points = new List<string>();
+    var clampedY = Math.Clamp(y2, 0, 7 );
+    var clampedX = Math.Clamp(x2, 0, 7);
+    if (y2 != clampedY || x2 != clampedX )
+    {
+        throw new NotImplementedException();
+    }
+
+    int m_new = 2 * (y2 - y1);
+    int slope_error_new = m_new - (x2 - x1);
+
+    for (int x = x1, y = y1; x <= x2; x++)
+    {
+        Console.Write("(" + x + "," + y + ")\n");
+        var newPoint = "" + x + "," + y + "";
+        Points.Add(newPoint);
+
+        // Add slope to increment angle formed 
+        slope_error_new += m_new;
+
+        // Slope error reached limit, time to 
+        // increment y and update slope error. 
+        if (slope_error_new >= 0)
+        {
+            y++;
+            slope_error_new -= 2 * (x2 - x1);
+        }
+    }
+
+    return Points;
+}
+
+
+GetTilesOnMovementLine(currentX, newX, currentY, newY);
+
+
+
+                if (dx > 0)
+                {
+                    Direction lineDirection = dy > 0 ? Direction.NorthEast : Direction.SouthEast;
+                    Point mappedDirection = DirectionMapping[lineDirection];
+
+                    a.DirectionOf(b);
+
+                    for (int x = a.X, y = a.Y; x <= dx; x++)
+                    {
+
+                        Console.Write("(" + x + "," + y + ")\n");
+                        var tile = y + "," + x;
+
+                        lineTiles.Add(tile);
+
+                        y++;
+                    }
+
+                    return lineTiles;
+
+                }
+                else
+                {
+                    return lineTiles;
+                }
+                
+               
+
+            }
+            else if (Math.Abs(dy) > 0) //(M1) if  5 > 0  (M2) if 0 > 0
+            {
+                //increase or decrease the a.Y value by 1. Add each combination to list. stop when values = b.Y
+                if (dy < 0)
+                {
+                    for (int y = a.Y, x = a.X; y <= b.Y; y++)
+                    {
+                        var tile = y + "," + x;
+
+                        lineTiles.Add(tile);
+                    }
+
+                    return lineTiles;
+                }
+                else
+                {
+                    for (int y = a.Y, x = dx; y >= b.Y; y--)
+                    {
+                        var tile = y + "," + x;
+
+                        lineTiles.Add(tile);
+                    }
+
+                    return lineTiles;
+                }
+            }
+            else
+            {
+                //increase or decrease the a.x value by 1. Add each combination to list. stop when values = b.x
+                for (int y = dy, x = dx; y <= b.Y; y++)
+                {
+                    var tile = y + "," + x;
+
+                    lineTiles.Add(tile);
+                }
+
+                return lineTiles;
+            }
+
+
+// Move1 (M1): point a = 7,0; point b = 7,5; (white king rook moving south down board from starting position)
+// Move1 (M1): Expected output of this method, as a "list", for this move in [Y,X] format:  (0,7),(1,7),(2,7),(4,7),(5,7)
+
+// Move2 (M2): point a = 7,0; point b = 2,0; (white king rook moving west across the board from starting position)
+// Move2 (M2): Expected output of this method, as a "list", for this move in [Y,X] format: (0,7),(0,6),(0,5),(0,4),(0,3),(0,2)
+
+// Move3 (M3): point a = 5,0; point b = 2,3; (white king bishop moving southwest down board from starting position) 
+// Move3 (M3): Expected output of this method, as a "list", for this move in [Y,X] format: (0,5),(1,4),(2.3),(3,2)
+
+// What I need to determine:
+// 1. if only Abs(x) > 0 (horizontal move) 
+// 2. if only Abs(y) > 0 (vertical move)
+// 3. if Abs(x) and Abs(y) > 0 (diagonal move)
+// 4. if x and y = 0 (no move)
+
+//(M1) dx = 7 - 7 = 0   (M2) dx = 7 - 2 = 5  (M3) dx = 5 - 2 = 3
+//(M1) dy = 0 - 5 = -5  (M2) dy = 0 - 0 = 0  (M3) dy = 0 - 3 = -3 
+
+        
+//Print out the list of tiles
+Console.WriteLine("Tiles crossed by move: ");
+foreach (Point tile in tilesOnLine) // Loop through List with foreach
+{
+    Console.Write($"({tile.X},{tile.Y})");
+}
+       
+       
+// Print out list of tiles on the movement line 
+Console.WriteLine("Tiles on line:");
+TilesOnMovementLine(CurrentTile,NewTile);
+
+
+ public void TilesOnMovementLine(Point a, Point b)
+{
+    int dx = b.X - a.X;  
+    int dy = a.Y - b.Y;  // Needs to be flipped, as we have an inverse-Y plane.
+
+    int adx = Math.Abs(dx);
+    int ady = Math.Abs(dy);
+    var distance = Math.Max(adx, ady);
+
+    var bearing = a.DirectionOf(b);
+
+    var translationVector = DirectionMapping[bearing];
+
+    var currentCoordinate = a;
+            
+    for (var i = 0; i < distance; i++)
+    {
+        currentCoordinate.Offset(translationVector);
+        //yield return Tiles[currentCoordinate.X, currentCoordinate.Y];
+        Console.Write($"({currentCoordinate.X},{currentCoordinate.Y})");
+    }
+}
+
+
+Tiles on line:
+0,1   p= queen
+1,1   p = pawn
+2,1    p= null
+3,1    p = white bishop
+
+
+pieces on line
+0 = queen
+1 = pawn
+2  = white bishop
+
+tilesonline.last(X => x.Piece) = white bishop
+piecesOnLine.Last() = white bishop
+
+
+
+
+
+
+
+
+
+
+List<ITile> Tiles
+List<IPiece> Pieces = Tiles.Select(x => x.Piece !=null)
+if (Tiles.Last(x => x.Piece == Pieces.Last)
+
+
+
+https://refactoring.guru/refactoring/smells
+
+https://refactoring.guru/smells/comments
+
+https://refactoring.guru/design-patterns/catalog
+
+https://refactoring.guru/design-patterns/strategy

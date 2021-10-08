@@ -8,5 +8,15 @@
         {
 
         }
+
+        public override bool SpecialisedMoveBehaviour(PieceMovementContext context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override bool CanMoveInDirection(Direction direction)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

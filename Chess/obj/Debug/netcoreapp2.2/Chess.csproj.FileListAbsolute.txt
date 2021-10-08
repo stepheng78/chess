@@ -22,3 +22,4 @@ C:\Users\stephen.garthwaite\source\repos\chess\Chess\obj\Debug\netcoreapp2.2\Che
 C:\Users\stephen.garthwaite\source\repos\chess\Chess\obj\Debug\netcoreapp2.2\Chess.dll
 C:\Users\stephen.garthwaite\source\repos\chess\Chess\obj\Debug\netcoreapp2.2\Chess.pdb
 C:\Users\stephen.garthwaite\source\repos\chess\Chess\obj\Debug\netcoreapp2.2\Chess.genruntimeconfig.cache
+C:\Users\stephen.garthwaite\source\repos\chess\Chess\bin\Debug\netcoreapp2.2\Board.cs

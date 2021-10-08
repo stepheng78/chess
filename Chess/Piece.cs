@@ -44,5 +44,21 @@ namespace Chess
             return Symbol;
         }
 
+        public bool CanMove(PieceMovementContext context)
+        {
+            // TODO create enum to handle error code message
+            if (context.ActivePlayer.PieceColour != Colour) return false;
+            if (context.CurrentCoordinate == context.TargetCoordinate) return false;
+            return SpecialisedMoveBehaviour(context);
+        }
+
+        public abstract bool SpecialisedMoveBehaviour(PieceMovementContext context);
+
+        protected virtual bool CanMoveTowardsDirection(Board.MovingTowardsDirection movingTowards, Direction direction)
+        {
+            return true;
+        }
+
+        protected abstract bool CanMoveInDirection(Direction direction); // *** why is this protected? 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Text;
 
 /*
@@ -20,26 +21,37 @@ namespace Chess
 
             Board chessBoard = new Board();
             chessBoard.GenerateTiles();
-
+            chessBoard.GeneratePlayers();
             chessBoard.GenerateChessPieces();
-
             chessBoard.DisplayBoard();
 
-            String nextMove = "";
-            string Piece = ";";
-
-            do
+            foreach (var activePlayer in chessBoard.GetNextActivePlayer())
             {
-                Console.WriteLine("Enter Piece to be moved:");
-                Piece = Console.ReadLine();
-                Console.WriteLine("Enter your move (e.g. 0,2):");
-                nextMove = Console.ReadLine();
+                var moveMade = false;
+                while (!moveMade)
+                {
+                    Console.WriteLine($"{activePlayer.PieceColour} - please enter a piece to be moved:");
+                    var piece = Console.ReadLine();
 
-                chessBoard.MovePiece(Piece, nextMove);
+                    if (piece == "exit") return; //break just exited current iteration of loop not the program
 
-                chessBoard.DisplayBoard();
-            } while (nextMove != "exit");
-            //} while ((Piece != "exit" | Piece != "e") | (nextMove != "exit" | nextMove != "e"));
+                    Console.WriteLine("Enter your move (e.g. 0,2):");
+                    var nextMove = Console.ReadLine();
+
+                    if (nextMove == "exit") return;
+
+                    if (chessBoard.MovePiece(activePlayer, piece, nextMove))
+                    {
+                        moveMade = true;
+                        chessBoard.DisplayBoard();
+                    }
+                    else
+                    {
+                        Console.WriteLine("Sorry, that's an invalid move!\r\n");
+                        chessBoard.DisplayBoard();
+                    }
+                }
+            }
         }
     }
 }
