@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.MoveInput;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Dynamic;
@@ -49,7 +50,7 @@ namespace Chess
 
         public void GeneratePlayers()
         {
-            _players.Add(new Player(PieceColour.White, Player.MovingTowardsDirection.Down));  //*** why are these lines not adding a new player object to the list??
+            _players.Add(new Player(PieceColour.White, Player.MovingTowardsDirection.Down));  
             _players.Add(new Player(PieceColour.Black, Player.MovingTowardsDirection.Up));
         }
 
@@ -107,79 +108,65 @@ namespace Chess
             Down = 2
         }
 
-        public bool MovePiece(Player activePlayer, string playerPiece, string newLocation)
+        public bool TryFindPiece(Player activePlayer, string currentLocation,  out) 
         {
-            for (int m = 0; m < Height; m++)
+            Point pieceLocation = new Point();
+            var convertPlayerInput = new ChessMoveInput();
+            convertPlayerInput.TryParse(currentLocation, out pieceLocation);
+
+            var pieceOnLocation = Tiles[pieceLocation.Y, pieceLocation.X].Piece;
+            if (pieceOnLocation != null && pieceOnLocation.Colour == activePlayer.PieceColour )
             {
-                for (int n = 0; n < Width; n++)
-                {
-                    if ((Tiles[m, n]).ToString() == playerPiece)
-                    {
-                        Console.WriteLine($"Found the piece [{playerPiece}] at position [{m}, {n}]");
-                        Console.WriteLine($"{Tiles[m, n]}");
-
-                        // Grab the playerPiece from its current tile then reset tile to default
-                        var pieceToMove = Tiles[m, n].Piece;
-                        //Tiles[m, n].SetPiece(null);
-
-                        // Split the newLocation Parameter so it can be used to find the correct index location 
-                        // in the array to move the playerPiece too.
-                        string[] newLocationArray = newLocation.Split(',');
-                        var newY = int.Parse(newLocationArray[0]);
-                        var newX = int.Parse(newLocationArray[1]);
-
-                        var clampedY = Math.Clamp(newY, 0, 7);
-                        var clampedX = Math.Clamp(newX, 0, 7);
-                        if (newY != clampedY || newX != clampedX)
-                        {
-                            throw new NotImplementedException();
-                        }
-
-                        //Generate list of all tiles on movement line to check if another piece is in the way
-                        Point currentTile = new Point(n, m);
-                        Point newTile = new Point(newX, newY);
-
-                        // ********************************************************************************* //
-
-                        //Check if a piece is present on any tile in the movement line then carry out these actions: 
-                        // a. if piece on tile, and same colour as current player then invalidate move and exit loop
-                        // b.  if piece on tile, and not same colour as current player then set NewTile to the currently processed tile co-ordinates
-
-                        // CURRENT TASK: Need to deal with more than one opposing piece being on the movement line. Must invalidate move as they would 
-                        // never proceed with move in real life
-                        // Player wouldn't be taking the piece they desired so would make another move instead. (greedy algorithm problem)
-                        // Solution: Is piece I have found the same coordinates as the intend move. If not then invalidate move
-
-                        // ********************************************************************************* //
-
-                        //IEnumerable<ITile> tilesOnLine = TilesOnMovementLine(CurrentTile,NewTile);
-                        List<ITile> tilesOnLine = TilesOnMovementLine(currentTile, newTile).ToList();
-
-                        // Setup the movement context of player's piece
-                        PieceMovementContext currentPieceMovementContext = new PieceMovementContext
-                        {
-                            ActivePlayer = activePlayer,
-                            CurrentCoordinate = currentTile,
-                            TargetCoordinate = newTile,
-                            TilesOnLine = tilesOnLine
-                        };
-
-                        if (pieceToMove.CanMove(currentPieceMovementContext))
-                        {
-                            // VALID MOVE
-                            // TODO add code to set pieceToMove to TargetCoordinate
-                            Tiles[clampedY, clampedX].SetPiece(pieceToMove);
-                            //return true; //TODO Why do I need this line to make the game operate correctly?
-                        }
-                        else
-                        {
-                            // INVALID MOVE
-                            return false;
-                        }
-                    }
-                }
+                Console.WriteLine($"Found the piece [{pieceOnLocation.ToString()}] at position [{pieceLocation.Y}, {pieceLocation.X}]");
+                return pieceLocation;
             }
-            return false;
+
+            pieceLocation = default; // TODO Can't return default value. Must come up with another approach
+            return pieceLocation;
+        }
+
+        public bool MovePiece(Player activePlayer, string currentLocation, string newLocation)
+        {
+            // Identify location of piece to be moved. 
+            var pieceLocation = FindPiece(activePlayer, currentLocation);
+
+            // Convert player move into index values
+            var targetLocation = new Point();
+            var moveInput = new ChessMoveInput();
+            moveInput.TryParse(newLocation, out targetLocation);
+ 
+            var clampedY = Math.Clamp(targetLocation.Y, 0, 7);
+            var clampedX = Math.Clamp(targetLocation.X, 0, 7);
+           
+            //Generate list of all tiles on movement line to check if another piece is in the way
+            Point newTile = new Point(clampedX, clampedY);
+            List<ITile> tilesOnLine = TilesOnMovementLine(pieceLocation, newTile).ToList();
+
+            // Setup the movement context of player's piece
+            PieceMovementContext currentPieceMovementContext = new PieceMovementContext
+            {
+                ActivePlayer = activePlayer,
+                CurrentCoordinate = pieceLocation,
+                TargetCoordinate = newTile,
+                TilesOnLine = tilesOnLine
+            };
+
+            var pieceToMove = Tiles[pieceLocation.Y, pieceLocation.X].Piece;
+
+            if (pieceToMove.CanMove(currentPieceMovementContext))
+            {
+                // Valid Move
+                Tiles[pieceLocation.Y, pieceLocation.X].SetPiece(null); 
+                Tiles[clampedY, clampedX].SetPiece(pieceToMove);
+                return true; 
+            }
+            else
+            {
+                // Invalid Move
+                Console.WriteLine( $"[{pieceToMove.ToString()}] can't make that move");
+                return false;
+            }
+
         }
 
         public bool CheckForPieceOnTile(IEnumerable<ITile> tiles)

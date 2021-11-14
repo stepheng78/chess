@@ -3,14 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Text;
 
-/*
- * Program simply makes a couple of calls to run the chess game 
- * 1. Generate required tiles of board
- * 2. Create chess pieces
- * 3. DisplayBoard
- *
-*/
-
 namespace Chess
 {
     class Program
@@ -24,23 +16,29 @@ namespace Chess
             chessBoard.GeneratePlayers();
             chessBoard.GenerateChessPieces();
             chessBoard.DisplayBoard();
-
+            
             foreach (var activePlayer in chessBoard.GetNextActivePlayer())
             {
                 var moveMade = false;
                 while (!moveMade)
                 {
+                    /*
                     Console.WriteLine($"{activePlayer.PieceColour} - please enter a piece to be moved:");
                     var piece = Console.ReadLine();
 
                     if (piece == "exit") return; //break just exited current iteration of loop not the program
+                    */
+                    Console.WriteLine($"{activePlayer.PieceColour} - Enter current location of piece to be moved (e.g. A1):");
+                    var pieceLocation = Console.ReadLine();
 
-                    Console.WriteLine("Enter your move (e.g. 0,2):");
+                    if (pieceLocation == "exit") return;
+
+                    Console.WriteLine($"{activePlayer.PieceColour} - Enter your move (e.g. C3):");
                     var nextMove = Console.ReadLine();
 
                     if (nextMove == "exit") return;
 
-                    if (chessBoard.MovePiece(activePlayer, piece, nextMove))
+                    if (chessBoard.MovePiece(activePlayer, pieceLocation, nextMove))
                     {
                         moveMade = true;
                         chessBoard.DisplayBoard();

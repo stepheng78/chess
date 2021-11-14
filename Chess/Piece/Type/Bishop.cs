@@ -5,7 +5,7 @@ namespace Chess
 {
     public sealed class Bishop : Piece
     {
-        public override string Symbol => Colour == PieceColour.White ? "WB" : "BB";
+        public override string Symbol => Colour == PieceColour.White ? "WB" : "BB";  
 
         public Bishop(PieceColour colour) : base(colour)
         {
@@ -19,7 +19,8 @@ namespace Chess
             // If the movement translation in not equal in both axis then move is invalid
             
             // trig check - magnitude along an axis
-            if (Math.Abs(context.TargetCoordinate.X) - Math.Abs(context.TargetCoordinate.Y) != 0) return false;
+            var magnitude = context.MoveMagnitude();
+            if (magnitude.X - magnitude.Y != 0) return false;
 
             // any piece in the way
             foreach (var tile in context.TilesOnLine.Take(context.TilesOnLine.Count - 1))

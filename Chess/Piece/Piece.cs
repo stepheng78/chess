@@ -7,9 +7,10 @@ namespace Chess
 {
     public abstract class Piece : IPiece
     {
-        public virtual string Symbol => "X";
+        //TODO workout how to make Piece distinguish whether it's the King or Queen version of a piece, when not the king or queen. 
+        public virtual string Symbol => "X"; 
         public PieceColour Colour { get; set; }
-        
+
         //public int StartLocation { get; set; }
         //public IDictionary<string, string> AllowedMovements = new Dictionary<string, string>(); //<string, string> == <Movement Direction , Movement Limit>
 

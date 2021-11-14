@@ -41,7 +41,24 @@ Issues to resolve when moving a piece
   
 -------------------------------------------------------------------------
 
+Point currentLocation = new Point(); 
 
+            for (int m = 0; m < Height; m++)
+            {
+                for (int n = 0; n < Width; n++)
+                {
+                    if (Tiles[m, n].ToString() == playerPiece) //ISSUE: unclear or changeable comparison 
+                    {
+                        Console.WriteLine($"Found the piece [{playerPiece}] at position [{m}, {n}]");
+                        Console.WriteLine($"{Tiles[m, n]}");
+
+                        return currentLocation = new Point(n, m);
+                    }
+                }
+            }
+
+            currentLocation = default;
+            return currentLocation;
 
 
 
