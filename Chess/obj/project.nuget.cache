@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "JXzis0iA1mkhVqO8Kaln0qBI5tAVdwrf43QrK3Vde729Sci1aafuZWl0X9mACWkvvGLYKXeJsTJZLLjRU6V98A==",
+  "dgSpecHash": "D17UAW0dZVwljfzO3oAng91C4MnwrroCbThmmioEyxySHNUkqdazhq/e/aosXGN+XfPluiFp4poqsHWidEizOg==",
   "success": true,
   "projectFilePath": "C:\\Users\\stephen.garthwaite\\source\\repos\\chess\\Chess\\Chess.csproj",
   "expectedPackageFiles": [
@@ -10,7 +10,8 @@
     "C:\\Users\\stephen.garthwaite\\.nuget\\packages\\system.composition.convention\\1.1.0\\system.composition.convention.1.1.0.nupkg.sha512",
     "C:\\Users\\stephen.garthwaite\\.nuget\\packages\\system.composition.hosting\\1.1.0\\system.composition.hosting.1.1.0.nupkg.sha512",
     "C:\\Users\\stephen.garthwaite\\.nuget\\packages\\system.composition.runtime\\1.1.0\\system.composition.runtime.1.1.0.nupkg.sha512",
-    "C:\\Users\\stephen.garthwaite\\.nuget\\packages\\system.composition.typedparts\\1.1.0\\system.composition.typedparts.1.1.0.nupkg.sha512"
+    "C:\\Users\\stephen.garthwaite\\.nuget\\packages\\system.composition.typedparts\\1.1.0\\system.composition.typedparts.1.1.0.nupkg.sha512",
+    "C:\\Users\\stephen.garthwaite\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.15\\microsoft.netcore.app.host.win-x64.5.0.15.nupkg.sha512"
   ],
   "logs": []
 }

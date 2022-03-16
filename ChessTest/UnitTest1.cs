@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using Xunit;
 using Chess;
+using Chess.Coordinate;
 
 namespace ChessTest
 {
@@ -27,7 +28,7 @@ namespace ChessTest
             board.GenerateChessPieces();
 
             //action
-            var tiles = board.TilesOnMovementLine(new Point(2, 2), new Point(4, 4)).ToList();
+            var tiles = board.TilesOnMovementLine(new ChessCoordinate("B", "1"), new ChessCoordinate("A", "2")).ToList();
             
            //Investigate environment
             Assert.Equal(board.Tiles[3, 3], tiles[0]);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using Chess.Coordinate;
 
 namespace Chess
 {
@@ -9,10 +10,10 @@ namespace Chess
     {
         private static readonly double Octile = Math.Sqrt(2.0) - 1.0;
 
-        public static Direction DirectionOf(this Point a, Point b)
+        public static Direction DirectionOf(this ChessCoordinate a, ChessCoordinate b)
         {
-            double dx = b.X - a.X;
-            double dy = a.Y - b.Y; // Needs to be flipped, as we have an inverse-Y plane.
+            double dx = b.Rank - a.Rank;
+            double dy = a.File - b.File; // Needs to be flipped, as we have an inverse-Y plane.
             if (Math.Abs(dx) > Math.Abs(dy))
             {
                 if ((Math.Abs(dy) / Math.Abs(dx)) <= Octile)

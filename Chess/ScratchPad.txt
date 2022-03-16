@@ -315,3 +315,28 @@ https://refactoring.guru/smells/comments
 https://refactoring.guru/design-patterns/catalog
 
 https://refactoring.guru/design-patterns/strategy
+
+
+/*
+    Point pieceLocation = new Point();
+var convertPlayerInput = new ChessMoveInput();
+convertPlayerInput.TryParse(currentLocation, out pieceLocation);
+
+var pieceOnLocation = Tiles[pieceLocation.Y, pieceLocation.X].Piece;
+if (pieceOnLocation != null && pieceOnLocation.Colour == activePlayer.PieceColour )
+{
+    Console.WriteLine($"Found the piece [{pieceOnLocation.ToString()}] at position [{pieceLocation.Y}, {pieceLocation.X}]");
+    return true;
+}
+*/
+
+/* Generics */
+
+public bool CanMoveGeneric<T>(fromCoord, toCoord) where T : IPiece 
+{
+    var piece =  Piece.Create(PieceColour.White, T.PieceType);; 
+}
+
+
+CanMoveGeneric<Bishop2>
+CanMoveGeneric<Rook>
