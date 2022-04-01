@@ -17,13 +17,18 @@ namespace Chess
 
         private bool _isGameFinished = false;
 
-        private List<Player> _players = new(); //*** was it right to initialise this field??
+        private List<Player> _players = new(); 
 
         public ITile[,] Tiles = new ITile[8, 8];
 
         public bool IsCurrentGameFinished => _isGameFinished; 
         //what is the purpose of this line (30/08/2021)? expose the private member _isGameFinished 
         //would this get updated on check mate?
+
+        public Board()
+        {
+            GenerateTiles();
+        }
 
         public IEnumerable<Player> GetNextActivePlayer()
         {
@@ -36,7 +41,7 @@ namespace Chess
             }
         }
 
-        public ITile[,] GenerateTiles()
+        private ITile[,] GenerateTiles()
         {
             for (int m = 0; m < Height; m++)
             {
@@ -135,7 +140,7 @@ namespace Chess
             List<ITile> tilesOnLine = TilesOnMovementLine(pieceTile, targetTile).ToList();
 
             // Setup the movement context of player's piece
-            PieceMovementContext currentPieceMovementContext = new PieceMovementContext
+            PieceMovementContext currentPieceMovementContext = new()
             {
                 ActivePlayer = activePlayer,
                 CurrentCoordinate = pieceTile,
@@ -195,7 +200,7 @@ namespace Chess
             for (var i = 0; i < distance; i++)
             {
                 currentCoordinate += translationVector;
-                yield return Tiles[currentCoordinate.Rank, currentCoordinate.File];
+                yield return Tiles[currentCoordinate.File, currentCoordinate.Rank];
             }
         }
 

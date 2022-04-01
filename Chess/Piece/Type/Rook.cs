@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Chess
 {
-    class Rook : Piece
+    public sealed class Rook : Piece
     {
         public override string Symbol => Colour == PieceColour.White ? "WR" : "BR";
 
@@ -17,8 +17,6 @@ namespace Chess
             // Rook can move in straight line in any direction.
             // 0:[1-max(y)] or [1 - max(x)]]:0 translation
             // If move is greater than 0 on both axises then move invalid
-            
-            // trig check - magnitude along an axis
             var magnitude = context.MoveMagnitude();
             if (magnitude.X > 0 && magnitude.Y > 0) return false;
 

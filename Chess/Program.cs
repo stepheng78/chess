@@ -13,7 +13,6 @@ namespace Chess
             Console.OutputEncoding = Encoding.Unicode;
 
             Board chessBoard = new Board();
-            chessBoard.GenerateTiles();
             chessBoard.GeneratePlayers();
             chessBoard.GenerateChessPieces();
             chessBoard.DisplayBoard();

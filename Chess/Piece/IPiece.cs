@@ -7,5 +7,7 @@ namespace Chess
         PieceColour Colour { get; }
 
         bool CanMove(PieceMovementContext context);
+
+        bool SpecialisedMoveBehaviour(PieceMovementContext context);
     }
 }
