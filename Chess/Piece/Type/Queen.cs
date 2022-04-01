@@ -14,8 +14,8 @@ namespace Chess
         public override bool SpecialisedMoveBehaviour(PieceMovementContext context)
         {
             //Queen can move diagonally or in a straight line. A 1:1 xy translation or 0:[1-max(y)] or [1 - max(x)]]:0 X:Y translation.
-            if ((Math.Abs(context.TargetCoordinate.X) - Math.Abs(context.TargetCoordinate.Y) != 0) &&
-                (Math.Abs(context.TargetCoordinate.X) > 0 && Math.Abs(context.TargetCoordinate.Y) > 0)) return false;
+            if ((Math.Abs(context.TargetCoordinate.Rank) - Math.Abs(context.TargetCoordinate.File) != 0) &&
+                (Math.Abs(context.TargetCoordinate.Rank) > 0 && Math.Abs(context.TargetCoordinate.File) > 0)) return false;
             return true;
         }
 

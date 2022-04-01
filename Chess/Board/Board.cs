@@ -1,10 +1,11 @@
-﻿using Chess.MoveInput;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
+using Chess.Coordinate;
+using Chess.MoveInput;
 
 
 namespace Chess
@@ -16,13 +17,18 @@ namespace Chess
 
         private bool _isGameFinished = false;
 
-        private List<Player> _players = new(); //*** was it right to initialise this field??
+        private List<Player> _players = new(); 
 
         public ITile[,] Tiles = new ITile[8, 8];
 
         public bool IsCurrentGameFinished => _isGameFinished; 
         //what is the purpose of this line (30/08/2021)? expose the private member _isGameFinished 
         //would this get updated on check mate?
+
+        public Board()
+        {
+            GenerateTiles();
+        }
 
         public IEnumerable<Player> GetNextActivePlayer()
         {
@@ -35,7 +41,7 @@ namespace Chess
             }
         }
 
-        public ITile[,] GenerateTiles()
+        private ITile[,] GenerateTiles()
         {
             for (int m = 0; m < Height; m++)
             {
@@ -108,62 +114,51 @@ namespace Chess
             Down = 2
         }
 
-        public bool TryFindPiece(Player activePlayer, string currentLocation,  out) 
+        public bool TryFindPiece(Player activePlayer, ChessCoordinate currentCoordinate,  out IPiece pieceToMove) 
         {
-            Point pieceLocation = new Point();
-            var convertPlayerInput = new ChessMoveInput();
-            convertPlayerInput.TryParse(currentLocation, out pieceLocation);
-
-            var pieceOnLocation = Tiles[pieceLocation.Y, pieceLocation.X].Piece;
-            if (pieceOnLocation != null && pieceOnLocation.Colour == activePlayer.PieceColour )
+            
+            // 1. Get piece at currentLocation 
+            // 2. Check piece is same color as activePlayer
+            // 3. return true if 2. is correct and populate out parameter pieceToMove with piece at currentLocation
+            // 4. return false if 2. is wrong and populate out parameter pieceToMove with a default value.  
+            pieceToMove = Tiles[currentCoordinate.File, currentCoordinate.Rank].Piece;
+            
+            if (pieceToMove != null && pieceToMove.Colour == activePlayer.PieceColour)
             {
-                Console.WriteLine($"Found the piece [{pieceOnLocation.ToString()}] at position [{pieceLocation.Y}, {pieceLocation.X}]");
-                return pieceLocation;
+                Console.WriteLine($"Found the piece [{pieceToMove}]");
+                return true;
             }
 
-            pieceLocation = default; // TODO Can't return default value. Must come up with another approach
-            return pieceLocation;
+            return false;
         }
 
-        public bool MovePiece(Player activePlayer, string currentLocation, string newLocation)
+        public bool MovePiece(Player activePlayer, IPiece currentPiece, ChessCoordinate pieceTile, ChessCoordinate targetTile)
         {
-            // Identify location of piece to be moved. 
-            var pieceLocation = FindPiece(activePlayer, currentLocation);
-
-            // Convert player move into index values
-            var targetLocation = new Point();
-            var moveInput = new ChessMoveInput();
-            moveInput.TryParse(newLocation, out targetLocation);
- 
-            var clampedY = Math.Clamp(targetLocation.Y, 0, 7);
-            var clampedX = Math.Clamp(targetLocation.X, 0, 7);
-           
             //Generate list of all tiles on movement line to check if another piece is in the way
-            Point newTile = new Point(clampedX, clampedY);
-            List<ITile> tilesOnLine = TilesOnMovementLine(pieceLocation, newTile).ToList();
+            //Point pieceTile = new Point(pieceLocation.Rank, pieceLocation.File);
+            //Point targetTile = new Point(playerMove.Rank, playerMove.File);
+            List<ITile> tilesOnLine = TilesOnMovementLine(pieceTile, targetTile).ToList();
 
             // Setup the movement context of player's piece
-            PieceMovementContext currentPieceMovementContext = new PieceMovementContext
+            PieceMovementContext currentPieceMovementContext = new()
             {
                 ActivePlayer = activePlayer,
-                CurrentCoordinate = pieceLocation,
-                TargetCoordinate = newTile,
+                CurrentCoordinate = pieceTile,
+                TargetCoordinate = targetTile,
                 TilesOnLine = tilesOnLine
             };
 
-            var pieceToMove = Tiles[pieceLocation.Y, pieceLocation.X].Piece;
-
-            if (pieceToMove.CanMove(currentPieceMovementContext))
+            if (currentPiece.CanMove(currentPieceMovementContext))
             {
                 // Valid Move
-                Tiles[pieceLocation.Y, pieceLocation.X].SetPiece(null); 
-                Tiles[clampedY, clampedX].SetPiece(pieceToMove);
+                Tiles[pieceTile.File, pieceTile.Rank].SetPiece(null); 
+                Tiles[targetTile.File, targetTile.Rank].SetPiece(currentPiece);
                 return true; 
             }
             else
             {
                 // Invalid Move
-                Console.WriteLine( $"[{pieceToMove.ToString()}] can't make that move");
+                Console.WriteLine( $"[{currentPiece}] can't make that move");
                 return false;
             }
 
@@ -187,10 +182,10 @@ namespace Chess
             { Direction.NorthWest, new Point(-1, -1) }
         };
 
-        public IEnumerable<ITile> TilesOnMovementLine(Point a, Point b)
+        public IEnumerable<ITile> TilesOnMovementLine(ChessCoordinate a, ChessCoordinate b)
         {
-            int dx = b.X - a.X;
-            int dy = a.Y - b.Y;  // Needs to be flipped, as we have an inverse-Y plane.
+            int dx = b.Rank - a.Rank;
+            int dy = a.File - b.File;  // Needs to be flipped, as we have an inverse-Y plane.
 
             int adx = Math.Abs(dx);
             int ady = Math.Abs(dy);
@@ -198,14 +193,14 @@ namespace Chess
 
             var bearing = a.DirectionOf(b);
 
-             var translationVector = DirectionMapping[bearing];
+            var translationVector = DirectionMapping[bearing];
 
             var currentCoordinate = a;
 
             for (var i = 0; i < distance; i++)
             {
-                currentCoordinate.Offset(translationVector);
-                yield return Tiles[currentCoordinate.X, currentCoordinate.Y];
+                currentCoordinate += translationVector;
+                yield return Tiles[currentCoordinate.File, currentCoordinate.Rank];
             }
         }
 

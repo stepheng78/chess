@@ -52,7 +52,7 @@ namespace Chess.MoveInput
                 return true;
             }
 
-            moveInput = default;
+            moveInput =default;
             return false;
         }
     }
