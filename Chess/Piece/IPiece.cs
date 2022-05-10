@@ -9,5 +9,7 @@ namespace Chess
         bool CanMove(PieceMovementContext context);
 
         bool SpecialisedMoveBehaviour(PieceMovementContext context);
+
+        void HasBeenMoved();
     }
 }

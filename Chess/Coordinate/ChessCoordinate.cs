@@ -12,7 +12,7 @@ namespace Chess.Coordinate
 {
     public class ChessCoordinate
     {
-        public static readonly Regex ChessRegex = new Regex("^([a-hA-H])([1-8])$");
+        public static readonly Regex ChessRegex = new("^([a-hA-H])([1-8])$");
         public static readonly Dictionary<string, int> RankConverter = MakeRankConverter();
         public static readonly Dictionary<string, int> FileConverter = MakeFileConverter();
 
@@ -90,7 +90,7 @@ namespace Chess.Coordinate
 
         /// <summary>
         /// Validates that the supplied rank and file strings fit in the board parameters. On 
-        /// successfull validation returns the converted value for them.
+        /// successful validation returns the converted value for them.
         /// </summary>
         /// <param name="rank">A string in the format of "A" - "H"</param>
         /// <param name="file">A string in the format of "1" - "8"</param>

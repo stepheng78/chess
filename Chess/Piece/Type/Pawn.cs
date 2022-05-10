@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Chess
 {
     public class Pawn : Piece
     {
         public override string Symbol => Colour == PieceColour.White ? "WP" : "BP";
+        public bool IsFirstMove { get; private set; } = true;
 
         public Pawn(PieceColour colour) : base(colour)
         {
-
+            //What is allowed inside a constructor?
         }
 
         public override bool SpecialisedMoveBehaviour(PieceMovementContext context)
@@ -19,17 +22,70 @@ namespace Chess
 
             //Checks: 1. If move is first move is it 2 spaces or less?
             // 2. If move not first then move only allowed to be 1 space from current tile?
-            // 3. Is direction of movement forward
+            // 3. Is direction of movement towards opponent
             // 4. If move is diagonally is there a piece on the target tile? If not move invalid.
-            // 
-            //if (Math.Abs(context.TargetCoordinate.X) > 0 && Math.Abs(context.TargetCoordinate.Y) > 0) return false;
+            var magnitude = context.MoveMagnitude;
+
+            // Check direction of movement is towards opponent
+            if (!CanMoveInDirection(context)) { return false; }
+
+            // Check magnitude of movement is correct for the current move
+            if (magnitude.X > 0 || magnitude.Y > 1) //generic behaviour. all pawns must adhere to this movement rule
+            {
+                if (!(IsFirstMove && magnitude.X == 0 && magnitude.Y == 2)) //specialised move
+                {
+                    return false;
+                }
+
+                // Check if movement is diagonal. If true then check an opponent piece is on target tile
+                if (magnitude.X == 1 && magnitude.Y == 1 && context.TilesOnLine.Last().Piece?.Colour == Colour)
+                {
+                    return false;
+                }
+            }
+
+            
+
+            // any piece in the way
+            return context.TilesOnLine.Take(context.TilesOnLine.Count - 1).All(tile => tile.Piece == null);
+            
+            /*
+            foreach (var tile in context.TilesOnLine.Take(context.TilesOnLine.Count - 1))
+            {
+                if (tile.Piece != null) return false;
+            }
+
             return true;
-            //throw new System.NotImplementedException();
+            */
+            
+            
         }
 
-        protected override bool CanMoveInDirection(Direction direction)
+        protected override bool CanMoveInDirection(PieceMovementContext direction)
         {
-            throw new System.NotImplementedException();
+            var bearing = direction.CurrentCoordinate.DirectionOf(direction.TargetCoordinate);
+
+            if (direction.ActivePlayer.PieceColour == PieceColour.White)
+            {
+                if (bearing == Direction.South || bearing == Direction.SouthEast || bearing == Direction.SouthWest)
+                {
+                    return true;
+                }
+                
+                return false;
+            }
+            
+            if (bearing == Direction.North || bearing == Direction.NorthEast || bearing == Direction.NorthWest)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override void HasBeenMoved()
+        {
+            IsFirstMove = false;
         }
     }
 }

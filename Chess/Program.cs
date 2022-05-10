@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Linq;
 using System.Text;
 using Chess.Coordinate;
 
@@ -12,7 +13,7 @@ namespace Chess
         {
             Console.OutputEncoding = Encoding.Unicode;
 
-            Board chessBoard = new Board();
+            Board chessBoard = new();
             chessBoard.GeneratePlayers();
             chessBoard.GenerateChessPieces();
             chessBoard.DisplayBoard();
@@ -42,8 +43,9 @@ namespace Chess
                     if (nextMove == "exit") return;
 
                     var chessMove = new ChessCoordinate(nextMove);
+                    var opponent = chessBoard.GetOpponentPlayer(activePlayer);
 
-                    if (!chessBoard.MovePiece(activePlayer, pieceToMove, playerPieceLocation, chessMove))
+                    if (!chessBoard.MovePiece(activePlayer, opponent, pieceToMove, playerPieceLocation, chessMove))
                     {
                         Console.WriteLine("Sorry, that's an invalid move!\r\n");
                         chessBoard.DisplayBoard();

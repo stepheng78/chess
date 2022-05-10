@@ -21,9 +21,7 @@ namespace Chess
 
         public ITile[,] Tiles = new ITile[8, 8];
 
-        public bool IsCurrentGameFinished => _isGameFinished; 
-        //what is the purpose of this line (30/08/2021)? expose the private member _isGameFinished 
-        //would this get updated on check mate?
+        public bool IsCurrentGameFinished => _isGameFinished; //would this get updated on check mate?
 
         public Board()
         {
@@ -39,6 +37,11 @@ namespace Chess
                     yield return _players[i];
                 }
             }
+        }
+
+        public Player GetOpponentPlayer(Player activePlayer)
+        {
+            return _players.First(player => player.PieceColour != activePlayer.PieceColour);
         }
 
         private ITile[,] GenerateTiles()
@@ -71,7 +74,7 @@ namespace Chess
             Tiles[0, 5].SetPiece(Piece.Create(PieceColour.White, PieceType.Bishop));
             Tiles[0, 6].SetPiece(Piece.Create(PieceColour.White, PieceType.Knight));
             Tiles[0, 7].SetPiece(Piece.Create(PieceColour.White, PieceType.Rook));
-/*
+
             Tiles[1, 0].SetPiece(Piece.Create(PieceColour.White, PieceType.Pawn));
             Tiles[1, 1].SetPiece(Piece.Create(PieceColour.White, PieceType.Pawn));
             Tiles[1, 2].SetPiece(Piece.Create(PieceColour.White, PieceType.Pawn));
@@ -80,7 +83,7 @@ namespace Chess
             Tiles[1, 5].SetPiece(Piece.Create(PieceColour.White, PieceType.Pawn));
             Tiles[1, 6].SetPiece(Piece.Create(PieceColour.White, PieceType.Pawn));
             Tiles[1, 7].SetPiece(Piece.Create(PieceColour.White, PieceType.Pawn));
-*/
+
             //Setup Black Pieces
             Tiles[7, 0].SetPiece(Piece.Create(PieceColour.Black, PieceType.Rook));
             Tiles[7, 1].SetPiece(Piece.Create(PieceColour.Black, PieceType.Knight));
@@ -90,7 +93,7 @@ namespace Chess
             Tiles[7, 5].SetPiece(Piece.Create(PieceColour.Black, PieceType.Bishop));
             Tiles[7, 6].SetPiece(Piece.Create(PieceColour.Black, PieceType.Knight));
             Tiles[7, 7].SetPiece(Piece.Create(PieceColour.Black, PieceType.Rook));
-/*
+
             Tiles[6, 0].SetPiece(Piece.Create(PieceColour.Black, PieceType.Pawn));
             Tiles[6, 1].SetPiece(Piece.Create(PieceColour.Black, PieceType.Pawn));
             Tiles[6, 2].SetPiece(Piece.Create(PieceColour.Black, PieceType.Pawn));
@@ -99,9 +102,6 @@ namespace Chess
             Tiles[6, 5].SetPiece(Piece.Create(PieceColour.Black, PieceType.Pawn));
             Tiles[6, 6].SetPiece(Piece.Create(PieceColour.Black, PieceType.Pawn));
             Tiles[6, 7].SetPiece(Piece.Create(PieceColour.Black, PieceType.Pawn));
-*/
-
-
         }
 
         // QUESTION(S): 
@@ -116,11 +116,6 @@ namespace Chess
 
         public bool TryFindPiece(Player activePlayer, ChessCoordinate currentCoordinate,  out IPiece pieceToMove) 
         {
-            
-            // 1. Get piece at currentLocation 
-            // 2. Check piece is same color as activePlayer
-            // 3. return true if 2. is correct and populate out parameter pieceToMove with piece at currentLocation
-            // 4. return false if 2. is wrong and populate out parameter pieceToMove with a default value.  
             pieceToMove = Tiles[currentCoordinate.File, currentCoordinate.Rank].Piece;
             
             if (pieceToMove != null && pieceToMove.Colour == activePlayer.PieceColour)
@@ -132,17 +127,14 @@ namespace Chess
             return false;
         }
 
-        public bool MovePiece(Player activePlayer, IPiece currentPiece, ChessCoordinate pieceTile, ChessCoordinate targetTile)
+        public bool MovePiece(Player activePlayer, Player opponent, IPiece currentPiece, ChessCoordinate pieceTile, ChessCoordinate targetTile)
         {
-            //Generate list of all tiles on movement line to check if another piece is in the way
-            //Point pieceTile = new Point(pieceLocation.Rank, pieceLocation.File);
-            //Point targetTile = new Point(playerMove.Rank, playerMove.File);
             List<ITile> tilesOnLine = TilesOnMovementLine(pieceTile, targetTile).ToList();
 
-            // Setup the movement context of player's piece
             PieceMovementContext currentPieceMovementContext = new()
             {
                 ActivePlayer = activePlayer,
+                Opponent = opponent,
                 CurrentCoordinate = pieceTile,
                 TargetCoordinate = targetTile,
                 TilesOnLine = tilesOnLine
@@ -150,26 +142,24 @@ namespace Chess
 
             if (currentPiece.CanMove(currentPieceMovementContext))
             {
-                // Valid Move
                 Tiles[pieceTile.File, pieceTile.Rank].SetPiece(null); 
                 Tiles[targetTile.File, targetTile.Rank].SetPiece(currentPiece);
+                currentPiece.HasBeenMoved();
                 return true; 
             }
             else
             {
-                // Invalid Move
                 Console.WriteLine( $"[{currentPiece}] can't make that move");
                 return false;
             }
-
         }
 
-        public bool CheckForPieceOnTile(IEnumerable<ITile> tiles)
+        public static bool CheckForPieceOnTile(IEnumerable<ITile> tiles)
         {
             return tiles.Any(x => x.Piece != null);
         }
 
-        public static Dictionary<Direction, Point> DirectionMapping = new Dictionary<Direction, Point>
+        private static readonly Dictionary<Direction, Point> DirectionMapping = new()
         {
             // DirectionMapping will provide the step formula for moving across tiles in a particular direction
             { Direction.North, new Point(0, -1) },
@@ -213,7 +203,6 @@ namespace Chess
                     Console.Write($"{Tiles[i, j]} ");
                 }
                 Console.WriteLine("");
-
             }
         }
     }

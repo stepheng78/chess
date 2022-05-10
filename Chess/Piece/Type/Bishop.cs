@@ -19,7 +19,7 @@ namespace Chess
             // If the movement translation in not equal in both axis then move is invalid
             
             // trig check - magnitude along an axis
-            var magnitude = context.MoveMagnitude();
+            var magnitude = context.MoveMagnitude;
             if (magnitude.X - magnitude.Y != 0) return false;
 
             // any piece in the way
@@ -34,7 +34,7 @@ namespace Chess
             return true;
         }
 
-        protected override bool CanMoveInDirection(Direction direction)
+        protected override bool CanMoveInDirection(PieceMovementContext direction)
         {
             throw new System.NotImplementedException();
         }

@@ -7,7 +7,6 @@ namespace Chess
 {
     public abstract class Piece : IPiece
     {
-        //TODO workout how to make Piece distinguish whether it's the King or Queen version of a piece, when not the king or queen. 
         public virtual string Symbol => "X"; 
         public PieceColour Colour { get; set; }
 
@@ -21,23 +20,16 @@ namespace Chess
 
         public static IPiece Create(PieceColour colour, PieceType type)
         {
-            switch (type)
+            return type switch
             {
-                case PieceType.Rook:
-                    return new Rook(colour);
-                case PieceType.Knight:
-                    return new Knight(colour); 
-                case PieceType.Bishop:
-                    return new Bishop(colour); 
-                case PieceType.Queen:
-                    return new Queen(colour); 
-                case PieceType.King:
-                    return new King(colour); 
-                case PieceType.Pawn:
-                    return new Pawn(colour);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+                PieceType.Rook => new Rook(colour),
+                PieceType.Knight => new Knight(colour),
+                PieceType.Bishop => new Bishop(colour),
+                PieceType.Queen => new Queen(colour),
+                PieceType.King => new King(colour),
+                PieceType.Pawn => new Pawn(colour),
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
         }
 
         public override string ToString()
@@ -45,7 +37,7 @@ namespace Chess
             return Symbol;
         }
 
-        public bool CanMove(PieceMovementContext context)
+        public bool CanMove(PieceMovementContext context) // Method cannot be overridden as it's not abstract or virtual
         {
             // TODO create enum to handle error code message
             if (context.ActivePlayer.PieceColour != Colour) return false;
@@ -60,6 +52,9 @@ namespace Chess
             return true;
         }
 
-        protected abstract bool CanMoveInDirection(Direction direction); // *** why is this protected? 
+        protected abstract bool CanMoveInDirection(PieceMovementContext direction); // *** why is this protected? // Abstract: Children must implement method. Can't have any definition in the Parent
+
+        // Virtual: Parent provides implementation but can be overridden by child
+        public virtual void HasBeenMoved() { }
     }
 }

@@ -6,7 +6,7 @@ using Chess.Coordinate;
 
 namespace Chess
 {
-    public static class PointExtensions
+    public static class ChessCoordinateExtensions
     {
         private static readonly double Octile = Math.Sqrt(2.0) - 1.0;
 

@@ -7,7 +7,7 @@ namespace Chess.MoveInput
 {
     public class ChessMoveInput : IMoveInput
     {
-        public static readonly Regex ChessRegex = new Regex("^([a-hA-H])([1-8])$");
+        public static readonly Regex ChessRegex = new("^([a-hA-H])([1-8])$");
         public static readonly Dictionary<string, int> RankConverter = MakeRankConverter();
         public static readonly Dictionary<string, int> FileConverter = MakeFileConverter();
 
