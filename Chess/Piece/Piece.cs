@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+using System.Drawing;
+using System.Linq;
+using Chess.Coordinate;
 
 namespace Chess
 {
@@ -9,9 +11,6 @@ namespace Chess
     {
         public virtual string Symbol => "X"; 
         public PieceColour Colour { get; set; }
-
-        //public int StartLocation { get; set; }
-        //public IDictionary<string, string> AllowedMovements = new Dictionary<string, string>(); //<string, string> == <Movement Direction , Movement Limit>
 
         public Piece(PieceColour colour)
         {
@@ -39,10 +38,22 @@ namespace Chess
 
         public bool CanMove(PieceMovementContext context) // Method cannot be overridden as it's not abstract or virtual
         {
-            // TODO create enum to handle error code message
             if (context.ActivePlayer.PieceColour != Colour) return false;
-            if (context.CurrentCoordinate == context.TargetCoordinate) return false;
-            return SpecialisedMoveBehaviour(context);
+
+            // no objects in TilesOnLine most likely means current tile has been chosen as destination which is an invalid move
+            // todo: return a custom message. potentially using a new message class
+            if (context.TilesOnLine.Count == 0) return false;
+
+            // if targeting piece can we take it
+            if (context.TilesOnLine.Last().Piece?.Colour == Colour) return false;
+
+            if (this is not IJumpOver) 
+            {
+                var tilesToCheck = context.TilesOnLine.Take(context.TilesOnLine.Count - 1);
+                if (tilesToCheck.Any(x => x.Piece != null)) return false;
+            }
+
+            return context.CurrentCoordinate != context.TargetCoordinate && SpecialisedMoveBehaviour(context);
         }
 
         public abstract bool SpecialisedMoveBehaviour(PieceMovementContext context);
@@ -52,9 +63,26 @@ namespace Chess
             return true;
         }
 
-        protected abstract bool CanMoveInDirection(PieceMovementContext direction); // *** why is this protected? // Abstract: Children must implement method. Can't have any definition in the Parent
+        // Abstract: Children must implement method. Can't have any definition in the Parent
+        protected abstract bool CanMoveInDirection(PieceMovementContext direction); // *** why is this protected? 
 
         // Virtual: Parent provides implementation but can be overridden by child
         public virtual void HasBeenMoved() { }
+
+        protected abstract IList<List<IGameCoordinate>> ThreatenedCoordinates(IGameCoordinate currentCoordinate);
+
+        protected List<IGameCoordinate> WalkCoordinates(IGameCoordinate coord, Direction direction, int limit = Int32.MaxValue)
+        {
+            var list = new List<IGameCoordinate>();
+
+            var walkCount = 0;
+
+            for (var nextCoord = coord.Translate(direction); nextCoord.IsValid && walkCount < limit; nextCoord = nextCoord.Translate(direction), walkCount++)
+            {
+                list.Add(nextCoord);
+            }
+
+            return list;
+        } 
     }
 }

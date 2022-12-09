@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Chess.MoveInput;
+using Chess.Exceptions;
 
 namespace Chess.Coordinate
 {
-    public class ChessCoordinate
+    public class ChessCoordinate : IGameCoordinate
     {
         public static readonly Regex ChessRegex = new("^([a-hA-H])([1-8])$");
         public static readonly Dictionary<string, int> RankConverter = MakeRankConverter();
@@ -48,8 +44,25 @@ namespace Chess.Coordinate
             return toReturn;
         }
 
+        /// <summary>
+        /// X
+        /// </summary>
         public int Rank { get; private set; }
+        /// <summary>
+        /// Y
+        /// </summary>
         public int File { get; private set; }
+
+
+        public int X => Rank;
+        public int Y => File;
+
+        public IGameCoordinate Translate(int byX, int byY)
+        {
+            return new ChessCoordinate(Rank + byX, File + byY);
+        }
+
+        public bool IsValid => Rank > -1 && File > -1 && Rank < 8 && File < 8;
 
         /// <summary>
         /// Constructs a chess coordinate from a valid rank and file string.
@@ -60,8 +73,7 @@ namespace Chess.Coordinate
             var match = ChessRegex.Match(input);
             if (!match.Success)
             {
-                //TODO: make this just a message back to the user rather than it fail the app. Good idea or not??
-                throw new ArgumentException("Entered string is not a valid chess coordinate.");
+                throw new ChessCoordinateNotValidException("Entered string is not a valid chess coordinate.", new Exception());
             }
 
             var rank = match.Groups[1].Value;
@@ -86,6 +98,33 @@ namespace Chess.Coordinate
             var rank = a.Rank + b.X;
             var file = a.File + b.Y;
             return new ChessCoordinate(rank, file) ;
+        }
+
+        public static ChessCoordinate operator -(ChessCoordinate a, Point b)
+        {
+            var rank = a.Rank - b.X;
+            var file = a.File - b.Y;
+            return new ChessCoordinate(rank, file);
+        }
+
+        public static bool operator <(ChessCoordinate a, Point b)
+        {
+            return a.Rank < b.X && a.File < b.Y;
+        }
+
+        public static bool operator >(ChessCoordinate a, Point b)
+        {
+            return a.Rank > b.X && a.File > b.Y;
+        }
+
+        public static bool operator <(ChessCoordinate a, Rectangle b)
+        {
+            return a.Rank >= b.Left && a.File >= b.Top && a.Rank <= b.Right && a.File <= b.Bottom;
+        }
+
+        public static bool operator >(ChessCoordinate a, Rectangle b)
+        {
+            return a.Rank > b.X && a.File > b.Y;
         }
 
         /// <summary>

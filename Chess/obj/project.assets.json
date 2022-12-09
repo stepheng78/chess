@@ -8,10 +8,14 @@
           "System.Composition": "1.1.0"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.VisualStudio.LiveShare.dll": {}
+          "lib/netstandard2.0/Microsoft.VisualStudio.LiveShare.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.VisualStudio.LiveShare.dll": {}
+          "lib/netstandard2.0/Microsoft.VisualStudio.LiveShare.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Composition/1.1.0": {
@@ -264,22 +268,17 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[5.0.15, 5.0.15]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

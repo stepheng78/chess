@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Dynamic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Chess.Coordinate;
 using Chess.MoveInput;
@@ -44,7 +45,7 @@ namespace Chess
             return _players.First(player => player.PieceColour != activePlayer.PieceColour);
         }
 
-        private ITile[,] GenerateTiles()
+        public ITile[,] GenerateTiles()
         {
             for (int m = 0; m < Height; m++)
             {
@@ -104,9 +105,6 @@ namespace Chess
             Tiles[6, 7].SetPiece(Piece.Create(PieceColour.Black, PieceType.Pawn));
         }
 
-        // QUESTION(S): 
-        //1. Was this function to help validate the move of a piece (e.g. restricted movement of pawn)?
-        //2. How do I determine the direction I am heading towards? Is it based on my movement line through the tile array?
         public enum MovingTowardsDirection
         {
             Error = 0,
@@ -127,7 +125,7 @@ namespace Chess
             return false;
         }
 
-        public bool MovePiece(Player activePlayer, Player opponent, IPiece currentPiece, ChessCoordinate pieceTile, ChessCoordinate targetTile)
+        public bool MovePiece(Player activePlayer, Player opponent, IPiece currentPiece, ChessCoordinate pieceTile, ChessCoordinate targetTile)  
         {
             List<ITile> tilesOnLine = TilesOnMovementLine(pieceTile, targetTile).ToList();
 
@@ -147,30 +145,16 @@ namespace Chess
                 currentPiece.HasBeenMoved();
                 return true; 
             }
-            else
-            {
-                Console.WriteLine( $"[{currentPiece}] can't make that move");
-                return false;
-            }
-        }
 
+            Console.WriteLine( $"[{currentPiece}] can't make that move");
+            return false;
+         }
+
+        //TODO: Decide if I need CheckForPieceOnTile Method
         public static bool CheckForPieceOnTile(IEnumerable<ITile> tiles)
         {
             return tiles.Any(x => x.Piece != null);
         }
-
-        private static readonly Dictionary<Direction, Point> DirectionMapping = new()
-        {
-            // DirectionMapping will provide the step formula for moving across tiles in a particular direction
-            { Direction.North, new Point(0, -1) },
-            { Direction.NorthEast, new Point(1, -1) },
-            { Direction.East, new Point(1, 0) },
-            { Direction.SouthEast, new Point(1, 1) },
-            { Direction.South, new Point(0, 1) },
-            { Direction.SouthWest, new Point(-1, 1) },
-            { Direction.West, new Point(-1, 0) },
-            { Direction.NorthWest, new Point(-1, -1) }
-        };
 
         public IEnumerable<ITile> TilesOnMovementLine(ChessCoordinate a, ChessCoordinate b)
         {
@@ -181,9 +165,11 @@ namespace Chess
             int ady = Math.Abs(dy);
             var distance = Math.Max(adx, ady);
 
-            var bearing = a.DirectionOf(b);
+            var bearing = a.DirectionOf(b); 
+            // TODO: Must deal with a bearing of none. Occurs if the player enters their move
+            // as the same tile their pieces is already on 
 
-            var translationVector = DirectionMapping[bearing];
+            var translationVector = DirectionExtensions.DirectionMapping[bearing];
 
             var currentCoordinate = a;
 
@@ -196,14 +182,32 @@ namespace Chess
 
         public void DisplayBoard()
         {
+            var file = 1;
+            
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
                 {
                     Console.Write($"{Tiles[i, j]} ");
                 }
+                Console.Write($"| {i + 1}");
                 Console.WriteLine("");
             }
+
+            Console.WriteLine(string.Concat(Enumerable.Repeat("\u2500", 24)));
+            
+            var arr = new[]
+            {
+                "A", "B", "C", "D", "E", "F", "G", "H"
+            };
+
+            foreach (var rank in arr)
+            {
+                Console.Write($"{rank} |");
+            }
+
+            Console.WriteLine("");
+            Console.WriteLine("");
         }
     }
 }

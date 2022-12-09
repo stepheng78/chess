@@ -34,9 +34,44 @@ Issues to resolve when moving a piece
 3. Is the location on the board?
 4. Start and end locaiton
 
+------------------------------------------------------------------------
 
+TEST CODE 
+[Theory]
+[InlineData("A2","A6", PieceColour.White, Player.MovingTowardsDirection.Down)]
+[InlineData("A7", "A6", PieceColour.Black, Player.MovingTowardsDirection.Up)]
+public void CanMoveInDirection_Pawn_Towards_Opponent(string currentCoordinate, string targetCoordinate, PieceColour pieceColour, Player.MovingTowardsDirection opponentDirection)
+{
+    var context = new PieceMovementContext
+    {
+        CurrentCoordinate = new ChessCoordinate(currentCoordinate),
+        TargetCoordinate = new ChessCoordinate(targetCoordinate),
+        ActivePlayer = new Player(pieceColour, opponentDirection)
+    };
 
+    var pawn = new Pawn(pieceColour);
+    var canMove = pawn.CanMoveInDirection(context);
 
+    Assert.True(canMove);
+}
+
+[Theory]
+[InlineData("A7", "A6", PieceColour.Black, Player.MovingTowardsDirection.Down)]
+[InlineData("A2", "A6", PieceColour.White, Player.MovingTowardsDirection.Up)]
+public void CanMoveInDirection_Pawn_Invalid_Move(string currentCoordinate, string targetCoordinate, PieceColour pieceColour, Player.MovingTowardsDirection opponentDirection)
+{
+    var context = new PieceMovementContext
+    {
+        CurrentCoordinate = new ChessCoordinate(currentCoordinate),
+        TargetCoordinate = new ChessCoordinate(targetCoordinate),
+        ActivePlayer = new Player(pieceColour, opponentDirection)
+    };
+
+    var pawn = new Pawn(pieceColour);
+    var canMove = pawn.CanMoveInDirection(context);
+
+    Assert.False(canMove);
+}
 
   
 -------------------------------------------------------------------------
@@ -340,3 +375,14 @@ public bool CanMoveGeneric<T>(fromCoord, toCoord) where T : IPiece
 
 CanMoveGeneric<Bishop2>
 CanMoveGeneric<Rook>
+
+
+
+if (currentpiece is IBishopMover bishopPiece)
+
+
+if (currentpiece is Bishop bishop)
+
+
+
+IJumpOverPieces

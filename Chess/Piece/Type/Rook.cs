@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using Chess.Coordinate;
 
 namespace Chess
 {
@@ -14,9 +17,7 @@ namespace Chess
 
         public override bool SpecialisedMoveBehaviour(PieceMovementContext context)
         {
-            // Rook can move in straight line in any direction.
-            // 0:[1-max(y)] or [1 - max(x)]]:0 translation
-            // If move is greater than 0 on both axises then move invalid
+            // Need to deal with castling 
             var magnitude = context.MoveMagnitude;
             if (magnitude.X > 0 && magnitude.Y > 0) return false;
 
@@ -35,6 +36,19 @@ namespace Chess
         protected override bool CanMoveInDirection(PieceMovementContext direction)
         {
             throw new System.NotImplementedException();
+        }
+
+        protected override IList<List<IGameCoordinate>> ThreatenedCoordinates(IGameCoordinate currentCoordinate)
+        {
+            var toReturn = new List<List<IGameCoordinate>>
+            {
+                WalkCoordinates(currentCoordinate, Direction.North),
+                WalkCoordinates(currentCoordinate, Direction.West),
+                WalkCoordinates(currentCoordinate, Direction.South),
+                WalkCoordinates(currentCoordinate, Direction.East)
+            };
+
+            return toReturn.Where(x => x.Any()).ToList();
         }
     }
 }

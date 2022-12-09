@@ -24,9 +24,6 @@ namespace Chess
             {
                 if (tile.Piece != null) return false;
             }
-
-            // if targeting piece can we take it
-            if (context.TilesOnLine.Last().Piece?.Colour == Colour) return false;
             
             return true;
         }

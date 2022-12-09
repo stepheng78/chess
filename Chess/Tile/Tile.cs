@@ -15,7 +15,7 @@ namespace Chess
 
         public override string ToString()
         {
-            return Piece?.ToString() ?? "XX";
+            return Piece?.ToString() ?? "__";
         }
     }
 }

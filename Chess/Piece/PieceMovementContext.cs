@@ -11,8 +11,8 @@ namespace Chess
 
         public Player Opponent { get; set; }
 
-        public ChessCoordinate CurrentCoordinate { get; set;  }
-        public ChessCoordinate TargetCoordinate { get; set;  }
+        public ChessCoordinate CurrentCoordinate { get; set; }
+        public ChessCoordinate TargetCoordinate { get; set; }
 
         public List<ITile> TilesOnLine { get; set; } // this is a pair of accessor methods
 

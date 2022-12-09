@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using Chess.Coordinate;
+using Chess.Exceptions;
 
 namespace Chess
 {
@@ -23,37 +24,45 @@ namespace Chess
                 var moveMade = false;
                 while (!moveMade)
                 {
-                    Console.WriteLine(
-                        $"{activePlayer.PieceColour} - Enter current location of piece to be moved (e.g. A1):");
-                    var pieceLocation = Console.ReadLine();
+                    Console.Write($"{activePlayer.PieceColour} - Enter location of piece to move (e.g. A1): ");
+                    var pieceLocation = String.Concat((Console.ReadLine()).Where(c => !Char.IsWhiteSpace(c)));
 
                     if (pieceLocation == "exit") return;
-                    var playerPieceLocation = new ChessCoordinate(pieceLocation);
 
-                    if (!chessBoard.TryFindPiece(activePlayer, playerPieceLocation, out IPiece pieceToMove))
+                    try
                     {
-                        Console.WriteLine($"Sorry, no {activePlayer.PieceColour} piece can be found at {pieceLocation}!\r\n");
+                        var playerPieceLocation = new ChessCoordinate(pieceLocation);
+
+                        if (!chessBoard.TryFindPiece(activePlayer, playerPieceLocation, out IPiece pieceToMove))
+                        {
+                            Console.WriteLine($"Sorry, no {activePlayer.PieceColour} piece can be found at {pieceLocation}!\r\n");
+                            chessBoard.DisplayBoard();
+                            continue;
+                        }
+
+                        Console.Write($"{activePlayer.PieceColour} - Enter your move (e.g. C3): ");
+                        var nextMove = String.Concat((Console.ReadLine()).Where(c => !Char.IsWhiteSpace(c)));
+
+                        if (nextMove == "exit") return;
+
+                        var chessMove = new ChessCoordinate(nextMove);
+                        var opponent = chessBoard.GetOpponentPlayer(activePlayer);
+
+                        if (!chessBoard.MovePiece(activePlayer, opponent, pieceToMove, playerPieceLocation, chessMove))
+                        {
+                            Console.WriteLine("Sorry, that's an invalid move!\r\n");
+                            chessBoard.DisplayBoard();
+                            continue;
+                        }
+
+                        moveMade = true;
                         chessBoard.DisplayBoard();
-                        continue;
                     }
-
-                    Console.WriteLine($"{activePlayer.PieceColour} - Enter your move (e.g. C3):");
-                    var nextMove = Console.ReadLine();
-
-                    if (nextMove == "exit") return;
-
-                    var chessMove = new ChessCoordinate(nextMove);
-                    var opponent = chessBoard.GetOpponentPlayer(activePlayer);
-
-                    if (!chessBoard.MovePiece(activePlayer, opponent, pieceToMove, playerPieceLocation, chessMove))
+                    catch (ChessCoordinateNotValidException chessCoordEx )
                     {
-                        Console.WriteLine("Sorry, that's an invalid move!\r\n");
-                        chessBoard.DisplayBoard();
-                        continue;
+                        Console.WriteLine(chessCoordEx.Message);
+                        moveMade = false;
                     }
-
-                    moveMade = true;
-                    chessBoard.DisplayBoard();
                 }
             }
         }
